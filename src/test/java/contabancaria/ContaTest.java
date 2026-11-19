@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import org.junit.jupiter.params.provider.ValueSource;
+
 /**
  * Testes unitários para a classe Conta.
  *
@@ -118,6 +121,14 @@ class ContaTest {
         assertEquals(100, conta.getSaldo(), 0.001);
     }
 
+    @Test
+    void depositar_ValorNegativo_LancaIllegalArgumentException() {
+        var conta = new Conta("Maria", 100);
+
+        assertThrows(IllegalArgumentException.class, () -> conta.depositar(-10));
+        assertEquals(100, conta.getSaldo(), 0.001);
+    }
+
     // =======================================================
     // Testes para sacar
     // Sugestão de testes:
@@ -127,6 +138,15 @@ class ContaTest {
     // - Saque com valor negativo lança IllegalArgumentException
     // - Saque em conta inativa lança IllegalStateException
     // =======================================================
+
+    @Test
+    void sacar_ValorValido_AtualizaSaldo() {
+        var conta = new Conta("Maria", 100);
+
+        conta.sacar(40);
+
+        assertEquals(60, conta.getSaldo(), 0.001);
+    }
 
     // =======================================================
     // Testes para transferir
