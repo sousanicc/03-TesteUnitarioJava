@@ -148,6 +148,15 @@ class ContaTest {
         assertEquals(60, conta.getSaldo(), 0.001);
     }
 
+    @ParameterizedTest
+    @ValueSource(doubles = {0, -10})
+    void sacar_ValorZeroOuNegativo_LancaIllegalArgumentException(double valor) {
+        var conta = new Conta("Maria", 100);
+
+        assertThrows(IllegalArgumentException.class, () -> conta.sacar(valor));
+        assertEquals(100, conta.getSaldo(), 0.001);
+    }
+
     // =======================================================
     // Testes para transferir
     // Sugestão de testes:
