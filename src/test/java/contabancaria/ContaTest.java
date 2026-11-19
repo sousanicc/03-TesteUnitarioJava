@@ -149,7 +149,7 @@ class ContaTest {
     }
 
     @ParameterizedTest
-    @ValueSource(doubles = {0, -10})
+    @ValueSource(doubles = { 0, -10 })
     void sacar_ValorZeroOuNegativo_LancaIllegalArgumentException(double valor) {
         var conta = new Conta("Maria", 100);
 
@@ -183,5 +183,14 @@ class ContaTest {
     // - Encerrar conta já inativa lança IllegalStateException
     // - Conta encerrada tem isAtiva() == false
     // =======================================================
+
+    @Test
+    void encerrar_SaldoZero_DesativaConta() {
+        var conta = new Conta("Maria");
+
+        conta.encerrar();
+
+        assertFalse(conta.isAtiva());
+    }
 
 }
