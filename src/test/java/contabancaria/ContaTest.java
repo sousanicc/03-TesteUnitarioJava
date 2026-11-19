@@ -193,6 +193,60 @@ class ContaTest {
     // - Transferência com conta destino inativa lança exceção
     // =======================================================
 
+    @Test
+    void transferir_ValorValido_AtualizaSaldoDeAmbasContas() {
+        var origem = new Conta("Maria", 200);
+        var destino = new Conta("João", 100);
+
+        origem.transferir(destino, 50);
+
+        assertEquals(150, origem.getSaldo(), 0.001);
+        assertEquals(150, destino.getSaldo(), 0.001);
+    }
+
+    @ParameterizedTest
+    @ValueSource(doubles = {0, -10})
+    void transferir_ValorZeroOuNegativo_LancaIllegalArgumentException(double valor) {
+        var origem = new Conta("Maria", 200);
+        var destino = new Conta("João", 100);
+
+        assertThrows(IllegalArgumentException.class, () -> origem.transferir(destino, valor));
+        assertEquals(200, origem.getSaldo(), 0.001);
+        assertEquals(100, destino.getSaldo(), 0.001);
+    }
+
+    @Test
+    void transferir_SaldoInsuficiente_LancaIllegalStateException() {
+        var origem = new Conta("Maria", 200);
+        var destino = new Conta("João", 100);
+
+        assertThrows(IllegalStateException.class, () -> origem.transferir(destino, 201));
+        assertEquals(200, origem.getSaldo(), 0.001);
+        assertEquals(100, destino.getSaldo(), 0.001);
+    }
+
+    @Test
+    void transferir_OrigemInativa_LancaIllegalStateException() {
+        var origem = new Conta("Maria");
+        origem.encerrar();
+        var destino = new Conta("João", 100);
+
+        assertThrows(IllegalStateException.class, () -> origem.transferir(destino, 50));
+        assertEquals(0, origem.getSaldo(), 0.001);
+        assertEquals(100, destino.getSaldo(), 0.001);
+    }
+
+    @Test
+    void transferir_DestinoInativo_LancaIllegalStateException() {
+        var origem = new Conta("Maria", 200);
+        var destino = new Conta("João");
+        destino.encerrar();
+
+        assertThrows(IllegalStateException.class, () -> origem.transferir(destino, 50));
+        assertEquals(200, origem.getSaldo(), 0.001);
+        assertEquals(0, destino.getSaldo(), 0.001);
+    }
+
     // =======================================================
     // Testes para encerrar
     // Sugestão de testes:
