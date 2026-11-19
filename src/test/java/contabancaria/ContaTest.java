@@ -129,6 +129,15 @@ class ContaTest {
         assertEquals(100, conta.getSaldo(), 0.001);
     }
 
+    @Test
+    void depositar_ContaInativa_LancaIllegalStateException() {
+        var conta = new Conta("Maria");
+        conta.encerrar();
+
+        assertThrows(IllegalStateException.class, () -> conta.depositar(50));
+        assertEquals(0, conta.getSaldo(), 0.001);
+    }
+
     // =======================================================
     // Testes para sacar
     // Sugestão de testes:
@@ -163,6 +172,15 @@ class ContaTest {
 
         assertThrows(IllegalStateException.class, () -> conta.sacar(101));
         assertEquals(100, conta.getSaldo(), 0.001);
+    }
+
+    @Test
+    void sacar_ContaInativa_LancaIllegalStateException() {
+        var conta = new Conta("Maria");
+        conta.encerrar();
+
+        assertThrows(IllegalStateException.class, () -> conta.sacar(10));
+        assertEquals(0, conta.getSaldo(), 0.001);
     }
 
     // =======================================================
